@@ -35,6 +35,20 @@ docker compose up --build
 O servidor sobe em http://localhost:8080.
 
 O banco de dados e configurado automaticamente pelo Docker Compose usando as variaveis do arquivo `.env`.
+Exemplo de arquivo `.env`
+```.env
+POSTGRES_DB=movieflix
+POSTGRES_PASSWORD=
+POSTGRES_USER=
+
+```
+
+Também se deve inserir variaveis de ambiente como:
+```.env
+SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/movieflix
+SPRING_DATASOURCE_USERNAME=
+SPRING_DATASOURCE_PASSWORD=
+```
 
 ### Sem Docker
 
@@ -42,8 +56,8 @@ Voce precisa ter um PostgreSQL rodando localmente e configurar as variaveis de a
 
 ```bash
 SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/movieflix
-SPRING_DATASOURCE_USERNAME=andrew
-SPRING_DATASOURCE_PASSWORD=AndrewKimy
+SPRING_DATASOURCE_USERNAME=
+SPRING_DATASOURCE_PASSWORD=
 ```
 
 Depois:
