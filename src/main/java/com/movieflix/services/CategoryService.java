@@ -14,12 +14,12 @@ import java.util.UUID;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public List<Category> findALl(){
+    public List<Category> findAll(){
         return categoryRepository.findAll();
     }
 
 
-    public Category saveCategory(Category category) {
+    public Category save(Category category) {
         return categoryRepository.save(category);
     }
 
@@ -27,7 +27,12 @@ public class CategoryService {
         return categoryRepository.findById(id);
     }
 
-    public void deleteCategory(UUID id) {
-        categoryRepository.deleteById(id);
+    public boolean deleteById(UUID id) {
+        if (categoryRepository.existsById(id)) {
+            categoryRepository.deleteById(id);
+            return true;
+        }
+        return false;
+
     }
 }
