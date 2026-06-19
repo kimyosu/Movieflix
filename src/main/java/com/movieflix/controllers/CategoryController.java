@@ -1,8 +1,13 @@
 package com.movieflix.controllers;
 
+import com.movieflix.controllers.request.CategoryRequest;
+import com.movieflix.controllers.response.CategoryResponse;
 import com.movieflix.entities.Category;
+import com.movieflix.mapper.CategoryMapper;
 import com.movieflix.services.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,24 +27,42 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public List<Category> getAllCategories(){
-        return categoryService.findALl();
+    public ResponseEntity<List<CategoryResponse>> findAll() {
+        var categories = categoryService.findAll().stream()
+                .map(CategoryMapper::toCategoryResponse)
+                .toList();
+
+        return ResponseEntity.ok(categories);
     }
 
     @PostMapping
-    public Category saveCategory(@RequestBody Category category){
-        return categoryService.saveCategory(category
-        );
+    public ResponseEntity<CategoryResponse> save(@RequestBody CategoryRequest request) {
+
+        //Pegamos o request enviado pelo usuario e transformamos em Category entity
+        Category category = CategoryMapper.toCategory(request);
+        //o service vai retornar um novo Category
+        Category category1 = categoryService.save(category);
+        //Apos isso convertemos para CategoryResponse
+        return ResponseEntity.status(HttpStatus.CREATED).body(CategoryMapper.toCategoryResponse(category1));
     }
 
     @GetMapping("/{id}")
-    public Category getByCategoryId(@PathVariable UUID id){
-        return categoryService.findById(id).orElse(null);
+    public ResponseEntity<CategoryResponse> getById(@PathVariable UUID id) {
+        return categoryService.findById(id)
+                .map(x -> ResponseEntity.ok(CategoryMapper.toCategoryResponse(x)))
+                .orElse(ResponseEntity.notFound().build());
+
     }
 
     @DeleteMapping("/{id}")
-    public void DeleteCategoryById(@PathVariable UUID id){
-        categoryService.deleteCategory(id);
+    public ResponseEntity<Void> DeleteById(@PathVariable UUID id) {
+
+       if(categoryService.deleteById(id)){
+           return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+       }
+
+       return ResponseEntity.notFound().build();
+
     }
 
 }
