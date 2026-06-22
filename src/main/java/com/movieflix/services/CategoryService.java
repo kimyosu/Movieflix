@@ -35,4 +35,12 @@ public class CategoryService {
         return false;
 
     }
+
+    public Optional<Category> update(UUID id, Category category) {
+        return categoryRepository.findById(id)
+                .map(x -> {
+                    x.setName(category.getName());
+                   return categoryRepository.save(x);
+                });
+    }
 }

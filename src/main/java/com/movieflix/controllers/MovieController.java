@@ -8,12 +8,15 @@ import com.movieflix.services.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/movieflix/movie")
@@ -35,5 +38,18 @@ public class MovieController {
                 .toList()
         );
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MovieResponse> findById(@PathVariable UUID id){
+        return movieService.findById(id)
+                .map(movie -> ResponseEntity.ok(MovieMapper.toMovieResponse(movie)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MovieResponse> update(@PathVariable UUID id, @RequestBody MovieRequest request){
+
+    }
+
 
 }

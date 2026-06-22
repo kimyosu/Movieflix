@@ -36,4 +36,12 @@ public class StreamingService {
         return false;
 
     }
+
+    public Optional<Streaming> update(UUID id, Streaming streaming) {
+        return streamingRepository.findById(id)
+                .map(existing -> {
+                    existing.setName(streaming.getName());
+                    return streamingRepository.save(existing);
+                });
+    }
 }
